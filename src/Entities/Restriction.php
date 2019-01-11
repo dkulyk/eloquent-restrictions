@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DKulyk\Restrictions\Entities;
@@ -11,9 +12,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
- * Class Restriction
+ * Class Restriction.
  *
- * @package B2B\TCA\Core\Entities
  * @property-read int $id
  * @property-read Model $entity
  * @property int $type Restriction rule type.
@@ -33,17 +33,17 @@ class Restriction extends Model
     protected $fillable = [
         'type',
         'enabled',
-        'restriction'
+        'restriction',
     ];
 
     protected $casts = [
         'enabled' => 'bool',
-        'type' => 'int'
+        'type'    => 'int',
     ];
 
     protected $attributes = [
-        'type' => self::DENY,
-        'enabled' => false
+        'type'    => self::DENY,
+        'enabled' => false,
     ];
 
     /**

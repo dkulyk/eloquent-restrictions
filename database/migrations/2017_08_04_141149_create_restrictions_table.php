@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use DtKt\Restrictions\Enum\RestrictionType;
@@ -7,7 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreateRestrictionsTable
+ * Class CreateRestrictionsTable.
  */
 class CreateRestrictionsTable extends Migration
 {

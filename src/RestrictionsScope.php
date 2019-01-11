@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
@@ -21,7 +22,7 @@ class RestrictionsScope implements Scope
     /**
      * RestrictionScope constructor.
      *
-     * @param  string[] $allowedRestrictions Allowed restrictions class names.
+     * @param string[] $allowedRestrictions Allowed restrictions class names.
      */
     public function __construct(array $allowedRestrictions)
     {
@@ -31,8 +32,8 @@ class RestrictionsScope implements Scope
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
-     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param \Illuminate\Database\Eloquent\Model   $model
      *
      * @return void
      */
@@ -44,7 +45,7 @@ class RestrictionsScope implements Scope
     /**
      * Extend the query builder with the needed functions.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
+     * @param \Illuminate\Database\Eloquent\Builder $builder
      *
      * @return void
      */
@@ -57,9 +58,9 @@ class RestrictionsScope implements Scope
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  array|null $restrictions
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param \Illuminate\Database\Eloquent\Model   $model
+     * @param array|null                            $restrictions
      */
     private function applyRestrictions(Builder $builder, Model $model, array $restrictions = null)
     {
@@ -87,7 +88,7 @@ class RestrictionsScope implements Scope
 
                 $restrictionNames = array_filter([
                     $restriction,
-                    Relation::getMorphedModel($restriction)
+                    Relation::getMorphedModel($restriction),
                 ]);
 
                 //Deny query
@@ -98,7 +99,7 @@ class RestrictionsScope implements Scope
                 $hasQuery
                     ->whereIn('restriction', $restrictionNames)
                     ->where([
-                        'type' => Restriction::DENY,
+                        'type'    => Restriction::DENY,
                         'enabled' => true,
                     ])
                     ->whereHas('rules', function (Builder $query) use ($keys) {
@@ -115,7 +116,7 @@ class RestrictionsScope implements Scope
                 $hasQuery
                     ->whereIn('restriction', $restrictionNames)
                     ->where([
-                        'type' => Restriction::ALLOW,
+                        'type'    => Restriction::ALLOW,
                         'enabled' => true,
                     ])
                     ->whereDoesntHave('rules', function (Builder $query) use ($keys) {

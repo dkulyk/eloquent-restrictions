@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
@@ -11,7 +12,7 @@ final class Restrictions
      * Push restrictions to scope and returns new restrictions.
      *
      * @param array $restrictions
-     * @param bool $merge
+     * @param bool  $merge
      *
      * @return array
      */
@@ -31,10 +32,9 @@ final class Restrictions
     }
 
     /**
-     *
-     * @param  array $restrictions
-     * @param  bool|callable $merge
-     * @param  callable|null $callback
+     * @param array         $restrictions
+     * @param bool|callable $merge
+     * @param callable|null $callback
      *
      * @return mixed
      */
@@ -48,7 +48,7 @@ final class Restrictions
         self::pushRestrictions($restrictions, $merge);
 
         if (is_null($callback)) {
-            return null;
+            return;
         }
 
         try {
