@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Builder;
 
 final class RestrictionsServiceProvider extends ServiceProvider
 {
@@ -31,7 +32,7 @@ final class RestrictionsServiceProvider extends ServiceProvider
     private function registerMigrations()
     {
         if ($this->app->runningInConsole()) {
-            $this->loadMigrationsFrom(dirname(__DIR__) . '/database/migrations');
+            $this->loadMigrationsFrom(dirname(__DIR__).'/database/migrations');
         }
     }
 }

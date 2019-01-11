@@ -1,15 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
 
-use DKulyk\Restrictions\Entities\Restriction;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Support\Arrayable;
+use DKulyk\Restrictions\Entities\Restriction;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class RestrictionsScope implements Scope
 {
@@ -87,7 +88,7 @@ class RestrictionsScope implements Scope
 
                 $restrictionNames = array_filter([
                     $restriction,
-                    Relation::getMorphedModel($restriction)
+                    Relation::getMorphedModel($restriction),
                 ]);
 
                 //Deny query
