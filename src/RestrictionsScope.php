@@ -26,7 +26,9 @@ class RestrictionsScope implements Scope
      */
     public function __construct(array $allowedRestrictions)
     {
-        $this->allowedRestrictions = $allowedRestrictions;
+        $this->allowedRestrictions = array_map(function ($restriction) {
+            return Relation::getMorphedModel($restriction) ?? $restriction;
+        }, $allowedRestrictions);
     }
 
     /**
@@ -66,12 +68,21 @@ class RestrictionsScope implements Scope
     {
         $restrictions = $restrictions ?? Restrictions::getRestrictions();
 
-        $restrictions = array_filter($restrictions, function ($key) {
-            return in_array($key, $this->allowedRestrictions);
-        }, ARRAY_FILTER_USE_KEY);
+        $morphMap = array_flip(Relation::$morphMap);
 
-        $builder->where(function (Builder $builder) use ($model, $restrictions) {
+        $addHasWhere = new \ReflectionMethod(Builder::class, 'addHasWhere');
+        $addHasWhere->setAccessible(true);
+
+        $builder->where(function (Builder $builder) use ($model, $restrictions, $morphMap, $addHasWhere) {
             foreach ($restrictions as $restriction => $keys) {
+
+                $restrictionModel = Relation::getMorphedModel($restriction) ?? $restriction;
+                if (!in_array($restrictionModel, $this->allowedRestrictions)) {
+                    continue;
+                }
+
+                $restriction = $morphMap[$restrictionModel] ?? $restrictionModel;
+
                 /* @var Builder $this */
                 if ($keys instanceof Model) {
                     $keys = $keys->getKey();
@@ -106,7 +117,7 @@ class RestrictionsScope implements Scope
                         $query->whereKey($keys);
                     });
 
-                $builder->addHasWhere($hasQuery, $relation, '<', 1, 'and');
+                $addHasWhere->invoke($builder, $hasQuery, $relation, '<', 1, 'and');
 
                 //Allow query
                 $hasQuery = $relation->getRelationExistenceQuery($relation->getRelated()->newQuery(), $builder);
@@ -123,8 +134,16 @@ class RestrictionsScope implements Scope
                         $query->whereKey($keys);
                     });
 
-                $builder->addHasWhere($hasQuery, $relation, '<', 1, 'and');
+                $addHasWhere->invoke($builder, $hasQuery, $relation, '<', 1, 'and');
             }
         });
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowedRestrictions(): array
+    {
+        return $this->allowedRestrictions;
     }
 }

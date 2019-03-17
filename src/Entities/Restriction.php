@@ -25,8 +25,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Restriction extends Model
 {
-    public const ALLOW = 1;
-    public const DENY = 0;
+    public const ALLOW = 2;
+    public const DENY = 1;
 
     protected $table = 'restrictions';
 
@@ -43,7 +43,7 @@ class Restriction extends Model
 
     protected $attributes = [
         'type' => self::DENY,
-        'enabled' => false,
+        'enabled' => true,
     ];
 
     /**
