@@ -75,9 +75,8 @@ class RestrictionsScope implements Scope
 
         $builder->where(function (Builder $builder) use ($model, $restrictions, $morphMap, $addHasWhere) {
             foreach ($restrictions as $restriction => $keys) {
-
                 $restrictionModel = Relation::getMorphedModel($restriction) ?? $restriction;
-                if (!in_array($restrictionModel, $this->allowedRestrictions)) {
+                if (! in_array($restrictionModel, $this->allowedRestrictions)) {
                     continue;
                 }
 
