@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
 
-use Barryvdh\Debugbar\Facade;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * Class Restrictions.
