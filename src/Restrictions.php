@@ -8,7 +8,7 @@ use Barryvdh\Debugbar\Facade;
 
 /**
  * Class Restrictions.
- * 
+ *
  * @method static array pushRestrictions(array $restrictions, bool $merge = true) Push restrictions to scope and returns new restrictions.
  * @method static array popRestrictions() Pop restrictions from scope and returns them.
  * @method static void where(array $restrictions, $merge = true, callable $callback = null)
