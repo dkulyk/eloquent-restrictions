@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace DKulyk\Restrictions;
 
 use ReflectionMethod;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Collection;
 use DKulyk\Restrictions\Entities\Restriction;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Eloquent\{Model, Scope, Builder, Collection};
 
 /**
  * Class RestrictionsScope.
@@ -76,7 +79,6 @@ class RestrictionsScope implements Scope
 
         $builder->where(function (Builder $builder) use ($model, $restrictions, $morphMap, $addHasWhere) {
             foreach ($restrictions as $restriction => $keys) {
-
                 $restrictionModel = Relation::getMorphedModel($restriction) ?? $restriction;
                 if (! in_array($restrictionModel, $this->allowedRestrictions)) {
                     continue;

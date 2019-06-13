@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
  */
 final class RestrictionsServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
         $this->app->singleton('eloquent-restrictions', function () {
@@ -45,7 +44,7 @@ final class RestrictionsServiceProvider extends ServiceProvider
     private function registerMigrations()
     {
         if ($this->app->runningInConsole()) {
-            $this->loadMigrationsFrom(dirname(__DIR__) . '/database/migrations');
+            $this->loadMigrationsFrom(dirname(__DIR__).'/database/migrations');
         }
     }
 }
