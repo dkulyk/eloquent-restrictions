@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Builder;
+use ReflectionMethod;
 use Illuminate\Contracts\Support\Arrayable;
 use DKulyk\Restrictions\Entities\Restriction;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\{Model, Scope, Builder, Collection};
 
+/**
+ * Class RestrictionsScope.
+ */
 class RestrictionsScope implements Scope
 {
     /**
@@ -22,9 +23,9 @@ class RestrictionsScope implements Scope
     /**
      * RestrictionScope constructor.
      *
-     * @param  string[] $allowedRestrictions Allowed restrictions class names.
+     * @param  string[]  $allowedRestrictions  Allowed restrictions class names.
      */
-    public function __construct(array $allowedRestrictions)
+    public function __construct(array $allowedRestrictions = [])
     {
         $this->allowedRestrictions = array_map(function ($restriction) {
             return Relation::getMorphedModel($restriction) ?? $restriction;
@@ -34,8 +35,8 @@ class RestrictionsScope implements Scope
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
-     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
+     * @param  \Illuminate\Database\Eloquent\Model  $model
      *
      * @return void
      */
@@ -47,7 +48,7 @@ class RestrictionsScope implements Scope
     /**
      * Extend the query builder with the needed functions.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
      *
      * @return void
      */
@@ -60,9 +61,9 @@ class RestrictionsScope implements Scope
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder $builder
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  array|null $restrictions
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  array|null  $restrictions
      */
     private function applyRestrictions(Builder $builder, Model $model, array $restrictions = null)
     {
@@ -70,14 +71,14 @@ class RestrictionsScope implements Scope
 
         $morphMap = array_flip(Relation::$morphMap);
 
-        $addHasWhere = new \ReflectionMethod(Builder::class, 'addHasWhere');
+        $addHasWhere = new ReflectionMethod(Builder::class, 'addHasWhere');
         $addHasWhere->setAccessible(true);
 
         $builder->where(function (Builder $builder) use ($model, $restrictions, $morphMap, $addHasWhere) {
             foreach ($restrictions as $restriction => $keys) {
 
                 $restrictionModel = Relation::getMorphedModel($restriction) ?? $restriction;
-                if (!in_array($restrictionModel, $this->allowedRestrictions)) {
+                if (! in_array($restrictionModel, $this->allowedRestrictions)) {
                     continue;
                 }
 
@@ -86,7 +87,7 @@ class RestrictionsScope implements Scope
                 /* @var Builder $this */
                 if ($keys instanceof Model) {
                     $keys = $keys->getKey();
-                } elseif ($keys instanceof EloquentCollection) {
+                } elseif ($keys instanceof Collection) {
                     $keys = $keys->modelKeys();
                 } elseif ($keys instanceof Arrayable) {
                     $keys = $keys->toArray();
