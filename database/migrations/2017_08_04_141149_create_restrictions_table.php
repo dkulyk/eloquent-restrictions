@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use DtKt\Restrictions\Enum\RestrictionType;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateRestrictionsTable.
@@ -21,15 +21,15 @@ class CreateRestrictionsTable extends Migration
     {
         Schema::create('restrictions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("entity_type")->charset('latin1');
-            $table->unsignedBigInteger("entity_id");
+            $table->string('entity_type')->charset('latin1');
+            $table->unsignedBigInteger('entity_id');
             $table->string('restriction')->charset('latin1');
             $table->unsignedTinyInteger('type')->default(RestrictionType::DENY);
             $table->boolean('enabled');
             $table->timestamps();
 
             $table->index(['restriction', 'enabled', 'type']);
-            $table->index(["entity_type", "entity_id"]);
+            $table->index(['entity_type', 'entity_id']);
         });
     }
 
