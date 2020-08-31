@@ -23,7 +23,7 @@ class CreateRestrictionsTable extends Migration
             $table->increments('id');
             $table->string("entity_type")->charset('latin1');
             $table->unsignedBigInteger("entity_id");
-            $table->string('restriction');
+            $table->string('restriction')->charset('latin1');
             $table->unsignedTinyInteger('type')->default(RestrictionType::DENY);
             $table->boolean('enabled');
             $table->timestamps();
