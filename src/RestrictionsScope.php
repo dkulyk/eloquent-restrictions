@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace DKulyk\Restrictions;
 
-use ReflectionMethod;
-use Illuminate\Contracts\Support\Arrayable;
 use DKulyk\Restrictions\Entities\Restriction;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Eloquent\{Model, Scope, Builder, Collection};
+use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Query\Builder as Query;
+use ReflectionMethod;
 
 /**
  * Class RestrictionsScope.
@@ -77,7 +80,6 @@ class RestrictionsScope implements Scope
 
         $builder->where(function (Builder $builder) use ($model, $restrictions, $morphMap, $addHasWhere) {
             foreach ($restrictions as $restriction => $keys) {
-
                 $restrictionModel = Relation::getMorphedModel($restriction) ?? $restriction;
                 if (! in_array($restrictionModel, $this->allowedRestrictions)) {
                     continue;
@@ -104,7 +106,6 @@ class RestrictionsScope implements Scope
                     Relation::getMorphedModel($restriction),
                 ]);
 
-
                 //Deny query
                 $hasQuery = $relation->getRelationExistenceQuery($relation->getRelated()->newQuery(), $builder);
 
@@ -115,10 +116,10 @@ class RestrictionsScope implements Scope
                     ->where('restriction', $restrictionModel)
                     ->where('type', Restriction::DENY)
                     ->where('enabled', true)
-                    ->whereExists(function(Query $query) use ($rules,$keys){
+                    ->whereExists(function (Query $query) use ($rules, $keys) {
                         $query->from($rules->getTable())
                             ->whereColumn($rules->getQualifiedParentKeyName(), '=', $rules->getQualifiedForeignPivotKeyName())
-                            ->wherein($rules->getQualifiedRelatedPivotKeyName(), (array)$keys);
+                            ->wherein($rules->getQualifiedRelatedPivotKeyName(), (array) $keys);
                     });
 
                 $addHasWhere->invoke($builder, $hasQuery, $relation, '<', 1, 'and');
@@ -132,10 +133,10 @@ class RestrictionsScope implements Scope
                     ->where('restriction', $restrictionModel)
                     ->where('type', Restriction::ALLOW)
                     ->where('enabled', true)
-                    ->whereNotExists(function(Query $query) use ($rules,$keys){
+                    ->whereNotExists(function (Query $query) use ($rules, $keys) {
                         $query->from($rules->getTable())
                             ->whereColumn($rules->getQualifiedParentKeyName(), '=', $rules->getQualifiedForeignPivotKeyName())
-                            ->wherein($rules->getQualifiedRelatedPivotKeyName(), (array)$keys);
+                            ->wherein($rules->getQualifiedRelatedPivotKeyName(), (array) $keys);
                     });
 
                 $addHasWhere->invoke($builder, $hasQuery, $relation, '<', 1, 'and');
