@@ -23,6 +23,7 @@ class CreateRestrictionsRulesTable extends Migration
             $table->unsignedInteger('rule_id');
 
             $table->primary(['restriction_id', 'rule_id']);
+            $table->unique(['rule_id', 'restriction_id']);
 
             $table->foreign('restriction_id')
                 ->references('id')->on('restrictions')

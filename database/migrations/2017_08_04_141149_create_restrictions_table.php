@@ -21,15 +21,17 @@ class CreateRestrictionsTable extends Migration
     {
         Schema::create('restrictions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("entity_type")->charset('latin1');
-            $table->unsignedBigInteger("entity_id");
-            $table->string('restriction')->charset('latin1');
+            $table->string("entity_type");
+            $table->unsignedInteger("entity_id");
+            $table->string('restriction');
             $table->unsignedTinyInteger('type')->default(RestrictionType::DENY);
             $table->boolean('enabled');
             $table->timestamps();
 
-            $table->index(['restriction', 'enabled', 'type']);
-            $table->index(["entity_type", "entity_id"]);
+            $table->index(["entity_id", "entity_type"]);
+            $table->index(['restriction', 'type', 'enabled']);
+            $table->index(['entity_id', 'entity_type', 'restriction', 'type', 'enabled'], 'entity_id');
+            $table->index(['entity_type', 'enabled', 'type', 'restriction', 'entity_id'], 'entity_type');
         });
     }
 
