@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use RabbitCMS\Journal\Attributes\NoJournal;
 
 /**
  * Class Restriction.
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read Carbon $updated_at
  * @property-read Model[]|Collection $rules
  */
+#[NoJournal]
 class Restriction extends Model
 {
     public const ALLOW = 2;
